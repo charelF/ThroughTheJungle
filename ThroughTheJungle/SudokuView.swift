@@ -9,6 +9,8 @@ import SwiftUI
 
 struct SudokuView: View {
   
+  @Environment(\.colorScheme) var colorScheme
+  
   var sudoku: [[[Int]]] = []
   
   func getSudoku() -> [[[Int]]] {
@@ -44,12 +46,39 @@ struct SudokuView: View {
       }
       .buttonStyle(.bordered)
       SudokuGridView(sudoku: sudoku)
-      
+      SudokuNumberPad()
+      Button(action: {/* TODO */}) {
+          Text("Clear")
+              .font(.system(.headline, design: .rounded))
+      }
+      .buttonStyle(.bordered)
     }
   }
 }
 
+struct SudokuNumberPad: View {
+  
+  var numberPad: [[Int]] = [[1,2,3],[4,5,6],[7,8,9]]
+  
+  var body: some View {
+    Grid(horizontalSpacing: 0, verticalSpacing: 0) {
+      ForEach(Array(numberPad.enumerated()), id: \.offset) { rowIdx, row in
+        GridRow {
+          ForEach(Array(row.enumerated()), id: \.offset) { colIdx, number in
+            Text(String(number))
+          }
+        }
+      }
+    }
+  }
+}
+
+// TODO: make cell view more generic, it gets a symbol and some metadata that is optional etc
+// TODO: instead of border, just space out the grid and put a background, this will make other things easier after like not having to specify the pixel dimension of the rectangle
+
 struct SudokuGridView: View {
+  
+  @Environment(\.colorScheme) var colorScheme
   
   var sudoku: [[[Int]]]
 
@@ -71,6 +100,14 @@ struct SudokuGridView: View {
     }
   }
   
+  var borderColor: Color {
+    if colorScheme == .dark {
+      return Color.white
+    } else {
+      return Color.black
+    }
+  }
+  
   var body: some View {
     Grid(horizontalSpacing: 0, verticalSpacing: 0) {
       ForEach(Array(sudoku.enumerated()), id: \.offset) { rowIdx, row in
@@ -81,7 +118,7 @@ struct SudokuGridView: View {
             .border(
               width: getWidth(idx: colIdx),
               edges: [.leading],
-              color: Color.black
+              color: borderColor
             )
           }
         }
@@ -89,13 +126,13 @@ struct SudokuGridView: View {
         .border(
           width: getWidth(idx: rowIdx),
           edges: [.top],
-          color: Color.black
+          color: borderColor
         )
       }
     }
     
     .padding(5)
-    .border(Color.black, width: 5)
+    .border(borderColor, width: 5)
     .padding(5)
     
   }
@@ -135,11 +172,11 @@ struct CellView: View {
   
   var cellColor: Color {
     if isSelected {
-      return Color.red
+      return Color.blue.opacity(0.8)
     } else if isRelevant {
-      return Color.green
+      return Color.blue.opacity(0.1)
     } else {
-      return Color.yellow
+      return Color.clear
     }
   }
   
