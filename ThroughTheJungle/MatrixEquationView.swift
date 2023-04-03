@@ -22,34 +22,32 @@ class MatrixEquationGameState: ObservableObject {
   
   struct MatrixEquationView: View {
     
-    var M: [[Int]]
-    var b: [Int]
-    var x: [Int]
-    var e: [String]
-    var C: [[Int]]
-    var W: [[Int]]
-    var correctIndices: [Int]
+    let matrixEquation: MatrixEquation
     @ObservedObject var gameState: MatrixEquationGameState
     
     init() {
-      let matrixEquation = MatrixEquation()
-      (M,x,b,C) = matrixEquation.generateMatrixAndVectors(n: 2, m: 2, maxval_M: 2, maxval_b: 20, maxval_x: 5)
-      e = matrixEquation.getRandomEmojis(x: x.count)
-      (W, correctIndices) = matrixEquation.mixGuesses(correct: x, wrong: C)
-//      print(x)
-//      print(correctIndices)
-//      print(W)
-      gameState = MatrixEquationGameState(rowCount: x.count, buttonCount: 4)
+      let numRows: Int = 2
+      let numCols: Int = 2
+      matrixEquation = MatrixEquation(
+        numRows: numRows,
+        numCols: numCols,
+        maxM: 3,
+        maxB: 10, // if allowNegative and allowZero, b needs to be high enough
+        maxX: 3,
+        allowNegative: false,
+        allowZero: false
+      )
+      gameState = MatrixEquationGameState(rowCount: numCols, buttonCount: 4)
     }
     
     
     func formattedEquation(row: Int) -> String {
       var equation = ""
-      for (j, coeff) in M[row].enumerated() {
+      for (j, coeff) in matrixEquation.M[row].enumerated() {
         print(j,coeff)
         if coeff == 0 { continue }
         
-        let emoji = e[j]
+        let emoji = matrixEquation.emojis[j]
         let sign = coeff > 0 ? (equation.isEmpty ? "" : " + ") : " - "
         let absCoeff = abs(coeff)
         
@@ -59,7 +57,7 @@ class MatrixEquationGameState: ObservableObject {
           equation += sign + "\(absCoeff)" + emoji
         }
       }
-      equation += " = \(b[row])"
+      equation += " = \(matrixEquation.b[row])"
       return equation
     }
     
@@ -68,7 +66,7 @@ class MatrixEquationGameState: ObservableObject {
     }
     
     func handleGuess(rowIndex: Int, colIndex: Int) {
-      let correctColIndex = correctIndices[rowIndex]
+      let correctColIndex = matrixEquation.correctIndices[rowIndex]
       if colIndex == correctColIndex {
         gameState.buttonColor[rowIndex][colIndex] = Color.green.opacity(0.5)
       } else {
@@ -86,7 +84,7 @@ class MatrixEquationGameState: ObservableObject {
     var body: some View {
       VStack(alignment: .center) {
         VStack {
-          ForEach(0..<M.count, id: \.self) { row in
+          ForEach(0..<matrixEquation.M.count, id: \.self) { row in
             Text(formattedEquation(row: row))
               .font(.system(.title, design: .rounded))
               .bold()
@@ -95,14 +93,14 @@ class MatrixEquationGameState: ObservableObject {
         }
         
         VStack(alignment: .center) {
-          ForEach(Array(W.enumerated()), id: \.offset) { rowIndex, row in
+          ForEach(Array(matrixEquation.Choices.enumerated()), id: \.offset) { rowIndex, row in
             HStack {
               ForEach(Array(row.enumerated()), id: \.offset) { colIndex, item in
                 Button(action: {handleGuess(rowIndex: rowIndex, colIndex: colIndex)}, label: {
-                  Text(formattedButtonTitle(value: item, emoji: e[rowIndex]))
+                  Text(formattedButtonTitle(value: item, emoji: matrixEquation.emojis[rowIndex]))
                     .font(.system(.callout, design: .rounded))
                     .bold() 
-                    .foregroundColor(Color.black)
+                    .foregroundColor(Color.primary)
                 })
                 .buttonStyle(.bordered)
                 .disabled(gameState.rowHasBeenClicked[rowIndex])
