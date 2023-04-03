@@ -26,16 +26,16 @@ class MatrixEquationGameState: ObservableObject {
     @ObservedObject var gameState: MatrixEquationGameState
     
     init() {
-      let numRows: Int = 2
-      let numCols: Int = 2
+      let numRows: Int = 4
+      let numCols: Int = 4
       matrixEquation = MatrixEquation(
         numRows: numRows,
         numCols: numCols,
-        maxM: 3,
-        maxB: 10, // if allowNegative and allowZero, b needs to be high enough
-        maxX: 3,
+        maxM: 2,
+        maxB: 50, // if allowNegative and allowZero, b needs to be high enough
+        maxX: 10,
         allowNegative: false,
-        allowZero: false
+        allowZero: true
       )
       gameState = MatrixEquationGameState(rowCount: numCols, buttonCount: 4)
     }
@@ -83,12 +83,11 @@ class MatrixEquationGameState: ObservableObject {
     
     var body: some View {
       VStack(alignment: .center) {
-        VStack {
+        VStack(alignment: .trailing) {
           ForEach(0..<matrixEquation.M.count, id: \.self) { row in
             Text(formattedEquation(row: row))
               .font(.system(.title, design: .rounded))
               .bold()
-              .frame(alignment: .trailing)
           }
         }
         
