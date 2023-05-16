@@ -51,11 +51,13 @@ struct NumberSequenceView: View {
           Rectangle()
             .foregroundColor(getColor(m))
             .cornerRadius(10)
-            .frame(width: 50, height: 50)
+            .frame(width: 60, height: 60)
             .overlay(
               Group {
                 if let m {
                   Text(String(m))
+                    .bold()
+                    .font(.system(size: 30, design: .rounded))
                 } else {
                   TextField("", text: Binding(
                     get: { getGuess(guesses[index]) },
@@ -63,6 +65,8 @@ struct NumberSequenceView: View {
                   ))
                   .keyboardType(.numberPad)
                   .multilineTextAlignment(.center)
+                  .bold()
+                  .font(.system(size: 30, design: .rounded))
                 }
               }
             )
@@ -71,11 +75,12 @@ struct NumberSequenceView: View {
       Button(action: {
         if original == guesses {}
       }) {
-        Text("Check Arrays:")
+        Text("Check")
+        
       }
       .padding()
       
-      Text(original.compactMap { $0 != nil ? String($0) : "-" }
+      Text(original.compactMap {String($0)}
                        .joined(separator: " "))
       Text(masked.compactMap { $0 != nil ? String($0!) : "-" }
                        .joined(separator: " "))
@@ -90,5 +95,6 @@ struct NumberSequenceView: View {
 struct NumberSequenceView_Previews: PreviewProvider {
     static var previews: some View {
         NumberSequenceView()
+//        .previewInterfaceOrientation(.landscapeLeft)
     }
 }
