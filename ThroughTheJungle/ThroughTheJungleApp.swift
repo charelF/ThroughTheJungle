@@ -11,8 +11,8 @@ import SwiftUI
 struct ThroughTheJungleApp: App {
     var body: some Scene {
         WindowGroup {
-//            JungleView()
-          MatrixEquationView()
+            JungleView()
+//          MatrixEquationView()
         }
     }
 }
