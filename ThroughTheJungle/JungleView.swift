@@ -30,12 +30,6 @@ struct GameBoardView: View {
   let buttonCount = 30
   let currentLevel = 2
   
-  
-  let views = [
-    NumberSequenceView()
-//    MatrixEquationView()
-  ]
-  
   func getPos(_ index: Int) -> (x: CGFloat, y: CGFloat, cx: CGFloat, cy: CGFloat) {
     let angle = -180 + (300 / Double(buttonCount - 1) * Double(index - 1))
     let radians = angle * .pi / 180
@@ -65,6 +59,15 @@ struct GameBoardView: View {
     }
   }
   
+  @State var checkState: CheckState
+  var views: [NumberSequenceView]
+  
+  init() {
+    self.checkState = .disabledBecauseInput
+    self.views = []
+//    self.views.append(NumberSequenceView(checkState: $checkState))
+  }
+  
   
   var body: some View {
     NavigationStack {
@@ -85,6 +88,7 @@ struct GameBoardView: View {
                   .foregroundColor(Color.white)
               )
           })
+          .disabled(state != .current)
           .position(x: pos.x, y: pos.y)
           
           Text("Through the Jungle")
@@ -96,7 +100,7 @@ struct GameBoardView: View {
       }
       .navigationDestination(for: LevelState.self) { state in
         switch state {
-        case .current: views[0]
+        case .current: NumberSequenceView(checkState: $checkState)//views[0]
         case .done: Text("❌").font(.system(size: 100))
         case .locked: Text("❌").font(.system(size: 100))
         }

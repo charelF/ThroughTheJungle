@@ -182,29 +182,158 @@ import SwiftUI
 //    }
 //}
 
-struct ContentView: View {
-@State var fruits: [String] = ["🍎", "🍊", "🍌", "🥝"]
-var body: some View {
-    NavigationStack {
-        VStack(spacing: 20) {
-            NavigationLink("Navigate: String Value", value: "New Page")
-            
-            NavigationLink("Navigate: Int Value", value: 1)
-            
-            ForEach(fruits, id:\.self) { fruit in
-                NavigationLink(fruit, value: fruit)
+//struct ContentView: View {
+//@State var fruits: [String] = ["🍎", "🍊", "🍌", "🥝"]
+//var body: some View {
+//    NavigationStack {
+//        VStack(spacing: 20) {
+//            NavigationLink("Navigate: String Value", value: "New Page")
+//
+//            NavigationLink("Navigate: Int Value", value: 1)
+//
+//            ForEach(fruits, id:\.self) { fruit in
+//                NavigationLink(fruit, value: fruit)
+//            }
+//        }
+//        .navigationDestination(for: String.self) { value in
+//            Text("New screen")
+//            Text("Value is String -> \(value)")
+//        }
+//        .navigationDestination(for: Int.self) { value in
+//            Text("New screen")
+//            Text("Value is Integer -> \(value)")
+//        }
+//    }
+//}
+//}
+
+//import SwiftUI
+//
+//struct ContentView: View {
+//    @State private var currentTime = Date()
+//    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+//
+//    var body: some View {
+//        Text("\(formattedTime(currentTime))")
+//            .font(.title)
+//            .onReceive(timer) { input in
+//                currentTime = input
+//            }
+//    }
+//
+//    private func formattedTime(_ date: Date) -> String {
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "HH:mm:ss"
+//        return formatter.string(from: date)
+//    }
+//}
+
+
+
+import SwiftUI
+
+struct ConditionView<Content: View>: View {
+    let condition: () -> Bool
+    let onConditionMet: () -> Void
+    let retryLimit: Int
+    let retryInterval: TimeInterval
+    let contentView: Content
+    
+    @State private var retriesLeft: Int
+    @State private var isTimerRunning = false
+    
+    init(condition: @escaping () -> Bool, onConditionMet: @escaping () -> Void, retryLimit: Int, retryInterval: TimeInterval, @ViewBuilder content: () -> Content) {
+        self.condition = condition
+        self.onConditionMet = onConditionMet
+        self.retryLimit = retryLimit
+        self.retryInterval = retryInterval
+        self.contentView = content()
+        self._retriesLeft = State(initialValue: retryLimit)
+    }
+    
+    var body: some View {
+        VStack {
+            if retriesLeft > 0 {
+                contentView
+                    .disabled(isTimerRunning)
+                    .overlay(
+                        Text("Retries Left: \(retriesLeft)")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                            .padding()
+                            .opacity(isTimerRunning ? 0 : 1)
+                    )
+                    .onChange(of: condition()) { newValue in
+                        handleCondition(newValue)
+                    }
+            } else {
+                Text("Timer Running...")
+                    .font(.title)
+                    .foregroundColor(.gray)
+                    .padding()
             }
         }
-        .navigationDestination(for: String.self) { value in
-            Text("New screen")
-            Text("Value is String -> \(value)")
+        .onAppear {
+            handleCondition(condition())
         }
-        .navigationDestination(for: Int.self) { value in
-            Text("New screen")
-            Text("Value is Integer -> \(value)")
+    }
+    
+    private func handleCondition(_ conditionMet: Bool) {
+        if conditionMet {
+            onConditionMet()
+        } else if retriesLeft > 0 {
+            retriesLeft -= 1
+        }
+        
+        if retriesLeft == 0 {
+            startTimer()
+        }
+    }
+    
+    private func startTimer() {
+        isTimerRunning = true
+        Timer.scheduledTimer(withTimeInterval: retryInterval, repeats: false) { timer in
+            retriesLeft = retryLimit
+            isTimerRunning = false
         }
     }
 }
+
+
+struct ContentView: View {
+  @State private var isConditionMet = false
+  @State private var retries = 3
+  
+  var body
+  : some View {
+    ConditionView(
+      condition: { isConditionMet },
+      onConditionMet: { handleConditionMet() },
+      retryLimit: retries,
+      retryInterval: 10,
+      content: {
+        Button("Check Condition") {
+          checkCondition()
+        }
+        .font(.title)
+        .padding()
+        .background(Color.blue)
+        .foregroundColor(.white)
+        .cornerRadius(10)
+      }
+    )
+  }
+  
+  private func checkCondition() {
+    // Simulate condition evaluation
+    isConditionMet.toggle()
+  }
+  
+  private func handleConditionMet() {
+    // Handle condition met
+    print("Condition met!")
+  }
+  
 }
 
 

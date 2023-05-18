@@ -17,11 +17,14 @@ struct NumberSequenceView: View {
   var masked: [Int?]
   @State var guesses: [Int?]
   
-  init() {
+  @Binding var checkState: CheckState
+  
+  init(checkState: Binding<CheckState>) {
     let sequence = NumberSequenceView.generateSequence()
     original = sequence.original
     masked = sequence.masked
     guesses = sequence.masked
+    self._checkState = checkState
   }
   
   @State private var myValue: Int = 0
@@ -61,7 +64,13 @@ struct NumberSequenceView: View {
                 } else {
                   TextField("", text: Binding(
                     get: { getGuess(guesses[index]) },
-                    set: { guesses[index] = Int($0) ?? nil }
+                    set: {
+                      guesses[index] = Int($0) ?? nil
+                      if !guesses.contains(where: { $0 == nil }) && !(checkState == .disabledBecauseTimer) {
+                        checkState = .enabled
+                      }
+                      print("hey")
+                    }
                   ))
                   .keyboardType(.numberPad)
                   .multilineTextAlignment(.center)
@@ -72,13 +81,7 @@ struct NumberSequenceView: View {
             )
         }
       }
-      Button(action: {
-        if original == guesses {}
-      }) {
-        Text("Check")
-        
-      }
-      .padding()
+      CheckView(cond: {original == guesses}, checkState: $checkState)
       
       Text(original.compactMap {String($0)}
                        .joined(separator: " "))
@@ -92,9 +95,18 @@ struct NumberSequenceView: View {
 
 
 
+struct NumberSequenceViewPreviewContainer : View {
+  @State var checkState = CheckState.disabledBecauseInput
+    var body: some View {
+      NumberSequenceView(
+          checkState: $checkState
+        )
+    }
+}
+
 struct NumberSequenceView_Previews: PreviewProvider {
     static var previews: some View {
-        NumberSequenceView()
-//        .previewInterfaceOrientation(.landscapeLeft)
+      NumberSequenceViewPreviewContainer()
+        .previewInterfaceOrientation(.landscapeLeft)
     }
 }
