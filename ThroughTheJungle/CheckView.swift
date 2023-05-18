@@ -22,39 +22,42 @@ struct CheckView: View {
   @State var remainingGuesses = 2
   let totalGuesses = 2
   
-  @Binding var checkState: CheckState
+//  @Binding var checkState: CheckState
+  @Environment(\.checkState) var checkState//: CheckState
   
-  init(cond: @escaping () -> Bool, checkState: Binding<CheckState>) {
+//  init(cond: @escaping () -> Bool, checkState: Binding<CheckState>) {
+    init(cond: @escaping () -> Bool) {
+
     condition = cond
-    self._checkState = checkState
+//    self._checkState = checkState
   }
   
   var buttonText: String {
-    switch checkState {
+    switch checkState.wrappedValue {
     case .disabledBecauseTimer:
       return "⏳"
     case .solved:
       return "✅"
     default:
-      return "Check: (\(remainingGuesses)/\(totalGuesses))"
+      return "Check: (\(remainingGuesses)/\(totalGuesses)) \(String(describing: checkState.wrappedValue))"
     }
   }
   
   func buttonAction() {
     if remainingGuesses > 0 {
       if condition() {
-        checkState = .solved
+        checkState.wrappedValue = .solved
       } else {
         remainingGuesses -= 1
         if remainingGuesses <= 0 {
-          checkState = .disabledBecauseTimer
+          checkState.wrappedValue = .disabledBecauseTimer
           startTimer()
         } else {
-          checkState = .enabled
+          checkState.wrappedValue = .enabled
         }
       }
     } else {
-      checkState = .disabledBecauseTimer
+      checkState.wrappedValue = .disabledBecauseTimer
       startTimer()
     }
   }
@@ -71,13 +74,12 @@ struct CheckView: View {
       .buttonStyle(.bordered)
       
       .padding()
-      .disabled(checkState == .disabledBecauseTimer || checkState == .disabledBecauseInput)
+      .disabled(checkState.wrappedValue == .disabledBecauseTimer || checkState.wrappedValue == .disabledBecauseInput)
       
-      Text(checkState == .disabledBecauseTimer ? formattedTime(remainingTime) : "")
+      Text(checkState.wrappedValue == .disabledBecauseTimer ? formattedTime(remainingTime) : "")
         .bold()
         .font(.system(size: 30, design: .rounded))
         .padding()
-      
     }
   }
   private func startTimer() {
@@ -87,7 +89,7 @@ struct CheckView: View {
         remainingTime -= 1
       } else {
         timer.invalidate()
-        checkState = .enabled
+        checkState.wrappedValue = .enabled
         remainingGuesses = 1
         remainingTime = 10
       }
@@ -111,8 +113,8 @@ struct CheckViewPreviewContainer : View {
   @State var checkState = CheckState.enabled
     var body: some View {
         CheckView(
-          cond: {false},
-          checkState: $checkState
+          cond: {false}
+//          checkState: $checkState
         )
     }
 }

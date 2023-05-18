@@ -5,6 +5,8 @@
 //  Created by Charel Felten on 01/04/2023.
 //
 
+import SwiftUI
+
 struct JungleView_Previews: PreviewProvider {
   static var previews: some View {
     JungleView()
@@ -12,23 +14,26 @@ struct JungleView_Previews: PreviewProvider {
   }
 }
 
-
-import SwiftUI
-
-import SwiftUI
-
-import SwiftUI
-
 enum LevelState {
     case done
     case current
     case locked
 }
 
+private struct CheckStateKey: EnvironmentKey {
+  static let defaultValue: Binding<CheckState> = .constant(.enabled)
+}
+extension EnvironmentValues {
+  var checkState: Binding<CheckState> {
+    get { self[CheckStateKey.self] }
+    set { self[CheckStateKey.self] = newValue }
+  }
+}
+
 
 struct GameBoardView: View {
   let buttonCount = 30
-  let currentLevel = 2
+  @State var currentLevel = 1
   
   func getPos(_ index: Int) -> (x: CGFloat, y: CGFloat, cx: CGFloat, cy: CGFloat) {
     let angle = -180 + (300 / Double(buttonCount - 1) * Double(index - 1))
@@ -59,13 +64,17 @@ struct GameBoardView: View {
     }
   }
   
-  @State var checkState: CheckState
+  @State var checkState = CheckState.disabledBecauseInput
   var views: [NumberSequenceView]
+  // https://stackoverflow.com/questions/61847041/how-to-set-a-custom-environment-key-in-swiftui/61847419#61847419
+  // had to do it this way because it was hard to give the binding to the subview otherwhise, if the subview is defined
+  // in an init() or in a list like we do. (this is not possible for some reason)
   
   init() {
-    self.checkState = .disabledBecauseInput
     self.views = []
-//    self.views.append(NumberSequenceView(checkState: $checkState))
+    self.views += [
+      NumberSequenceView()
+    ]
   }
   
   
@@ -100,14 +109,22 @@ struct GameBoardView: View {
       }
       .navigationDestination(for: LevelState.self) { state in
         switch state {
-        case .current: NumberSequenceView(checkState: $checkState)//views[0]
-        case .done: Text("❌").font(.system(size: 100))
-        case .locked: Text("❌").font(.system(size: 100))
+        case .current: views[0].onAppear {
+          checkState = .disabledBecauseInput
+        }
+        default: EmptyView()
         }
       }
       .frame(width: 300, height: 300)
     }
+    .environment(\.checkState, $checkState)
+    .onChange(of: checkState) { cs in
+      if cs == .solved {
+        currentLevel += 1
+      }
+    }
   }
+    
 }
 
 
