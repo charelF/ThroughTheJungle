@@ -39,7 +39,7 @@ struct CheckView: View {
     case .solved:
       return "✅"
     default:
-      return "Check: (\(remainingGuesses)/\(totalGuesses)) \(String(describing: checkState.wrappedValue))"
+      return "Check: (\(remainingGuesses)/\(totalGuesses))"
     }
   }
   
@@ -72,6 +72,7 @@ struct CheckView: View {
           
       }
       .buttonStyle(.bordered)
+      .disabled(checkState.wrappedValue != .enabled)
       
       .padding()
       .disabled(checkState.wrappedValue == .disabledBecauseTimer || checkState.wrappedValue == .disabledBecauseInput)

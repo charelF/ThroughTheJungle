@@ -97,7 +97,7 @@ class MatrixEquationGameState: ObservableObject {
               ForEach(Array(row.enumerated()), id: \.offset) { colIndex, item in
                 Button(action: {handleGuess(rowIndex: rowIndex, colIndex: colIndex)}, label: {
                   Text(formattedButtonTitle(value: item, emoji: matrixEquation.emojis[rowIndex]))
-                    .font(.system(.callout, design: .rounded))
+                    .font(.system(.title2, design: .rounded))
                     .bold() 
                     .foregroundColor(Color.primary)
                 })
@@ -109,6 +109,8 @@ class MatrixEquationGameState: ObservableObject {
             }
           }
         }
+        
+        CheckView(cond: {true})
       }
     }
   }
