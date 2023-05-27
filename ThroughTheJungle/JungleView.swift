@@ -20,10 +20,15 @@ enum LevelState {
     case locked
 }
 
+class GameState: ObservableObject {
+  var level: Int = 0
+  var timeout: Bool = false
+}
+
 struct GameBoardView: View {
   let buttonCount = 30
   @State var currentLevel = 1
-//  @State var checkState: CheckState
+  //  @State var checkState: CheckState
   
   func getPos(_ index: Int) -> (x: CGFloat, y: CGFloat, cx: CGFloat, cy: CGFloat) {
     let angle = -180 + (300 / Double(buttonCount - 1) * Double(index - 1))
@@ -58,47 +63,56 @@ struct GameBoardView: View {
   
   var body: some View {
     NavigationStack {
-      
-      
-            ZStack() {
-              ForEach(1...buttonCount, id: \.self) { index in
-                let pos = getPos(index)
-                let state = getState(index)
-                let color = getColor(state)
-                NavigationLink(value: state, label: {
-                  Circle()
-                    .foregroundColor(color)
-                    .shadow(color: color, radius: 5, x: 0, y: 0)
-                    .frame(width: 50, height: 50)
-                    .overlay(
-                      Text("\(index)")
-                        .bold()
-                        .font(.system(size: 25, design: .rounded))
-                        .foregroundColor(Color.white)
-                    )
-                })
-                .disabled(state != .current)
-                .position(x: pos.x, y: pos.y)
-      
-                Text("Through the Jungle")
+      ZStack() {
+        ForEach(1...buttonCount, id: \.self) { index in
+          let pos = getPos(index)
+          let state = getState(index)
+          let color = getColor(state)
+          NavigationLink(
+            destination: destinationView(for: index),
+            label: {
+            Circle()
+              .foregroundColor(color)
+              .shadow(color: color, radius: 5, x: 0, y: 0)
+              .frame(width: 50, height: 50)
+              .overlay(
+                Text("\(index)")
                   .bold()
-                  .font(.system(size: 30, design: .rounded))
-                  .foregroundColor(.green)
-      
-              }
-            }
-            .navigationDestination(for: LevelState.self) { state in
-              if state == .current {
-                switch currentLevel {
-                case 1: NumberSequenceView(checkState: $checkState)
-                default: EmptyView()
-                }
-              }
-            }
-            .frame(width: 300, height: 300)
-          }
+                  .font(.system(size: 25, design: .rounded))
+                  .foregroundColor(Color.white)
+              )
+          })
+          .disabled(state != .current)
+          .position(x: pos.x, y: pos.y)
+          Text("Through the Jungle")
+            .bold()
+            .font(.system(size: 30, design: .rounded))
+            .foregroundColor(.green)
+          
+        }
+      }
+      .frame(width: 300, height: 300)
+      .onChange(of: checkState) { state in
+        if state == .solved {
+          currentLevel += 1
+          print("here")
+          checkState = .enabled
+        }
+      }
     }
   }
+  
+      private func destinationView(for level: Int) -> some View {
+          switch level {
+          case 1:
+              return AnyView(NumberSequenceView(checkState: $checkState))
+          case 2:
+              return AnyView(NumberSequenceView(checkState: $checkState))
+          default:
+              return AnyView(EmptyView())
+          }
+      }
+}
 
 
 
