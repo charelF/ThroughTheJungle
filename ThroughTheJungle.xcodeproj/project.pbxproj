@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		A2342C3F29D0D9510067BE20 /* ThroughTheJungleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2342C3E29D0D9510067BE20 /* ThroughTheJungleApp.swift */; };
-		A2342C4129D0D9510067BE20 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2342C4029D0D9510067BE20 /* ContentView.swift */; };
 		A2342C4329D0D9530067BE20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2342C4229D0D9530067BE20 /* Assets.xcassets */; };
 		A2342C4629D0D9530067BE20 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2342C4529D0D9530067BE20 /* Preview Assets.xcassets */; };
 		A2342C4D29D0D9E50067BE20 /* MatrixEquation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2342C4C29D0D9E50067BE20 /* MatrixEquation.swift */; };
@@ -22,7 +21,6 @@
 /* Begin PBXFileReference section */
 		A2342C3B29D0D9510067BE20 /* ThroughTheJungle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ThroughTheJungle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2342C3E29D0D9510067BE20 /* ThroughTheJungleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThroughTheJungleApp.swift; sourceTree = "<group>"; };
-		A2342C4029D0D9510067BE20 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A2342C4229D0D9530067BE20 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A2342C4529D0D9530067BE20 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A2342C4C29D0D9E50067BE20 /* MatrixEquation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixEquation.swift; sourceTree = "<group>"; };
@@ -66,7 +64,6 @@
 				A2342C3E29D0D9510067BE20 /* ThroughTheJungleApp.swift */,
 				A2FC79C729D81CE8002B4B1F /* JungleView.swift */,
 				A2A694E72A141C9700C9739B /* NumberSequenceView.swift */,
-				A2342C4029D0D9510067BE20 /* ContentView.swift */,
 				A29BE5BD2A165589002D4EFC /* CheckView.swift */,
 				A2342C4C29D0D9E50067BE20 /* MatrixEquation.swift */,
 				A2342C4E29D0DB9E0067BE20 /* MatrixEquationView.swift */,
@@ -158,7 +155,6 @@
 				A2A694E82A141C9700C9739B /* NumberSequenceView.swift in Sources */,
 				A2342C4F29D0DB9E0067BE20 /* MatrixEquationView.swift in Sources */,
 				A2342C5129D4D0FD0067BE20 /* SudokuView.swift in Sources */,
-				A2342C4129D0D9510067BE20 /* ContentView.swift in Sources */,
 				A2342C4D29D0D9E50067BE20 /* MatrixEquation.swift in Sources */,
 				A29BE5BE2A165589002D4EFC /* CheckView.swift in Sources */,
 				A2342C3F29D0D9510067BE20 /* ThroughTheJungleApp.swift in Sources */,

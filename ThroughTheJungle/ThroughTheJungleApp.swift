@@ -12,7 +12,6 @@ struct ThroughTheJungleApp: App {
     var body: some Scene {
         WindowGroup {
             JungleView()
-//          MatrixEquationView()
         }
     }
 }

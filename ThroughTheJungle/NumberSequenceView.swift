@@ -64,13 +64,16 @@ struct NumberSequenceView: View {
   var masked: [Int?]
   @State var guesses: [Int?]
   
-  @Environment(\.checkState) var checkState//: CheckState
+//  @Environment(\.checkState) var checkState//: CheckState
   
-  init() {
+  @Binding var checkState: CheckState
+  
+  init(checkState: Binding<CheckState>) {
     let sequence = NumberSequenceView.generateSequence()
     original = sequence.original
     masked = sequence.masked
     guesses = sequence.masked
+    self._checkState = checkState
   }
   
   @State private var myValue: Int = 0
@@ -111,8 +114,8 @@ struct NumberSequenceView: View {
                     get: { getGuess(guesses[index]) },
                     set: {
                       guesses[index] = Int($0) ?? nil
-                      if !guesses.contains(where: { $0 == nil }) && !(checkState.wrappedValue == .disabledBecauseTimer) {
-                        checkState.wrappedValue = .enabled
+                      if !guesses.contains(where: { $0 == nil }) && !(checkState == .disabledBecauseTimer) {
+                        checkState = .enabled
                         print("enabled")
                       }
                     }
@@ -126,7 +129,12 @@ struct NumberSequenceView: View {
             )
         }
       }
-      CheckView(cond: {original == guesses})
+      
+      Text(String(describing: original))
+      Text(String(describing: guesses))
+      Text(String(describing: $checkState.wrappedValue != .solved))
+      
+      CheckView(cond: {original == guesses}, checkState: $checkState)
 //      Text(original.compactMap {String($0)}
 //        .joined(separator: " "))
 //      Text(masked.compactMap { $0 != nil ? String($0!) : "-" }
@@ -134,13 +142,13 @@ struct NumberSequenceView: View {
 //      Text(guesses.compactMap { $0 != nil ? String($0!) : "-" }
 //        .joined(separator: " "))
     }
-    .navigationBarBackButtonHidden(checkState.wrappedValue != .solved)
+    .navigationBarBackButtonHidden(checkState != CheckState.solved)
   }
 }
 
-struct NumberSequenceView_Previews: PreviewProvider {
-  static var previews: some View {
-    NumberSequenceView()
-      .previewInterfaceOrientation(.landscapeLeft)
-  }
-}
+//struct NumberSequenceView_Previews: PreviewProvider {
+//  static var previews: some View {
+//    NumberSequenceView()
+//      .previewInterfaceOrientation(.landscapeLeft)
+//  }
+//}
