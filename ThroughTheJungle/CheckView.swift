@@ -10,7 +10,7 @@ import SwiftUI
 enum CheckState {
   case solved
   case enabled
-  case disabledBecauseInput
+//  case disabledBecauseInput
   case disabledBecauseTimer
 }
 
@@ -38,7 +38,7 @@ struct CheckView: View {
     case .solved:
       return "✅"
     default:
-      return "Check: (\(remainingGuesses)/\(totalGuesses)) \($checkState.wrappedValue)"
+      return "Check: (\(remainingGuesses)/\(totalGuesses)) \(checkState)"
     }
   }
   
@@ -47,19 +47,19 @@ struct CheckView: View {
     print(condition())
     if remainingGuesses > 0 {
       if condition() {
-        $checkState.wrappedValue = .solved
+        checkState = .solved
         print("solved")
       } else {
         remainingGuesses -= 1
         if remainingGuesses <= 0 {
-          $checkState.wrappedValue = .disabledBecauseTimer
+          checkState = .disabledBecauseTimer
           startTimer()
         } else {
-          $checkState.wrappedValue = .enabled
+          checkState = .enabled
         }
       }
     } else {
-      $checkState.wrappedValue = .disabledBecauseTimer
+      checkState = .disabledBecauseTimer
       startTimer()
     }
   }
@@ -74,12 +74,12 @@ struct CheckView: View {
           
       }
       .buttonStyle(.bordered)
-      .disabled($checkState.wrappedValue != .enabled)
+      .disabled(checkState != .enabled)
       
       .padding()
-      .disabled($checkState.wrappedValue == .disabledBecauseTimer || $checkState.wrappedValue == .disabledBecauseInput)
+      .disabled(checkState == .disabledBecauseTimer)
       
-      Text($checkState.wrappedValue == .disabledBecauseTimer ? formattedTime(remainingTime) : "")
+      Text(checkState == .disabledBecauseTimer ? formattedTime(remainingTime) : "")
         .bold()
         .font(.system(size: 30, design: .rounded))
         .padding()
@@ -92,7 +92,7 @@ struct CheckView: View {
         remainingTime -= 1
       } else {
         timer.invalidate()
-        $checkState.wrappedValue = .enabled
+        checkState = .enabled
         remainingGuesses = 1
         remainingTime = 10
       }

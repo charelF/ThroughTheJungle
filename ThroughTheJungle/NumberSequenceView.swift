@@ -63,9 +63,6 @@ struct NumberSequenceView: View {
   var original: [Int]
   var masked: [Int?]
   @State var guesses: [Int?]
-  
-//  @Environment(\.checkState) var checkState//: CheckState
-  
   @Binding var checkState: CheckState
   
   init(checkState: Binding<CheckState>) {
@@ -132,23 +129,26 @@ struct NumberSequenceView: View {
       
       Text(String(describing: original))
       Text(String(describing: guesses))
-      Text(String(describing: $checkState.wrappedValue != .solved))
+      Text(String(describing: checkState != .solved))
       
       CheckView(cond: {original == guesses}, checkState: $checkState)
-//      Text(original.compactMap {String($0)}
-//        .joined(separator: " "))
-//      Text(masked.compactMap { $0 != nil ? String($0!) : "-" }
-//        .joined(separator: " "))
-//      Text(guesses.compactMap { $0 != nil ? String($0!) : "-" }
-//        .joined(separator: " "))
+        .navigationBarBackButtonHidden(checkState != .solved)
     }
-    .navigationBarBackButtonHidden(checkState != CheckState.solved)
   }
 }
 
-//struct NumberSequenceView_Previews: PreviewProvider {
-//  static var previews: some View {
-//    NumberSequenceView()
-//      .previewInterfaceOrientation(.landscapeLeft)
-//  }
-//}
+
+struct xxx1 : View {
+  @State var checkState = CheckState.enabled
+    var body: some View {
+      NumberSequenceView(
+          checkState: $checkState
+        )
+    }
+}
+
+struct NumberSequenceView_Previews: PreviewProvider {
+  static var previews: some View {
+    xxx1()
+  }
+}

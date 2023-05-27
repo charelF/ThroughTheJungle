@@ -20,25 +20,6 @@ enum LevelState {
     case locked
 }
 
-//private struct CheckStateKey: EnvironmentKey {
-//  static let defaultValue: Binding<CheckState> = .constant(.enabled)
-//}
-//extension EnvironmentValues {
-//  var checkState: Binding<CheckState> {
-//    get {
-//      print("get")
-//      return self[CheckStateKey.self]
-//
-//    }
-//    set {
-//      print("set")
-//      self[CheckStateKey.self] = newValue
-//
-//    }
-//  }
-//}
-
-
 struct GameBoardView: View {
   let buttonCount = 30
   @State var currentLevel = 1
@@ -73,107 +54,56 @@ struct GameBoardView: View {
     }
   }
   
-  @State var checkState = CheckState.disabledBecauseInput
-//  var views: [AnyView]
-  // https://stackoverflow.com/questions/61847041/how-to-set-a-custom-environment-key-in-swiftui/61847419#61847419
-  // had to do it this way because it was hard to give the binding to the subview otherwhise, if the subview is defined
-  // in an init() or in a list like we do. (this is not possible for some reason)
-  
-//  init() {
-//    self.views = []
-//    self.views += [
-//      ,
-//      MatrixEquationView()
-//    ]
-//  }
-  
-//  func getView(index: Int) -> some View {
-//    switch index {
-//    case 0: return AnyView(NumberSequenceView())
-//    case 1: return AnyView(MatrixEquationView())
-//    default: return AnyView(EmptyView())
-//    }
-//  }
-  
+  @State var checkState = CheckState.enabled
   
   var body: some View {
     NavigationStack {
-      NavigationView {
-        VStack {
-          NavigationLink(destination: NumberSequenceView(checkState: $checkState)) {
-            Text("Navigate to View 1")
+      
+      
+            ZStack() {
+              ForEach(1...buttonCount, id: \.self) { index in
+                let pos = getPos(index)
+                let state = getState(index)
+                let color = getColor(state)
+                NavigationLink(value: state, label: {
+                  Circle()
+                    .foregroundColor(color)
+                    .shadow(color: color, radius: 5, x: 0, y: 0)
+                    .frame(width: 50, height: 50)
+                    .overlay(
+                      Text("\(index)")
+                        .bold()
+                        .font(.system(size: 25, design: .rounded))
+                        .foregroundColor(Color.white)
+                    )
+                })
+                .disabled(state != .current)
+                .position(x: pos.x, y: pos.y)
+      
+                Text("Through the Jungle")
+                  .bold()
+                  .font(.system(size: 30, design: .rounded))
+                  .foregroundColor(.green)
+      
+              }
+            }
+            .navigationDestination(for: LevelState.self) { state in
+              if state == .current {
+                switch currentLevel {
+                case 1: NumberSequenceView(checkState: $checkState)
+                default: EmptyView()
+                }
+              }
+            }
+            .frame(width: 300, height: 300)
           }
-          
-//          NavigationLink(destination: NumberSequenceView()) {
-//            Text("Navigate to View 2")
-//          }
-//
-//          NavigationLink(destination: NumberSequenceView()) {
-//            Text("Navigate to View 3")
-//          }
-        }
-      }
-      .navigationViewStyle(.stack)
-//      .environment(\.checkState, $checkState)
-//        .onChange(of: checkState) { cs in
-//          if cs == .solved {
-//            currentLevel += 1
-//          }
-//        }
-      
-      
-      //      ZStack() {
-      //        ForEach(1...buttonCount, id: \.self) { index in
-      //          let pos = getPos(index)
-      //          let state = getState(index)
-      //          let color = getColor(state)
-      //          NavigationLink(value: state, label: {
-      //            Circle()
-      //              .foregroundColor(color)
-      //              .shadow(color: color, radius: 5, x: 0, y: 0)
-      //              .frame(width: 50, height: 50)
-      //              .overlay(
-      //                Text("\(index)")
-      //                  .bold()
-      //                  .font(.system(size: 25, design: .rounded))
-      //                  .foregroundColor(Color.white)
-      //              )
-      //          })
-      //          .disabled(state != .current)
-      //          .position(x: pos.x, y: pos.y)
-      //
-      //          Text("Through the Jungle")
-      //            .bold()
-      //            .font(.system(size: 30, design: .rounded))
-      //            .foregroundColor(.green)
-      //
-      //        }
-      //      }
-      //      .navigationDestination(for: LevelState.self) { state in
-      //        switch state {
-      //        case .current: getView(index: 0).onAppear {
-      //          checkState = .disabledBecauseInput
-      //        }
-      //        default: EmptyView()
-      //        }
-      //      }
-      //      .frame(width: 300, height: 300)
-      //    }
-      //    .environment(\.checkState, $checkState)
-      //    .onChange(of: checkState) { cs in
-      //      if cs == .solved {
-      //        currentLevel += 1
-      //      }
-      //    }
     }
   }
-    
-}
+
 
 
 struct JungleView: View {
   var body: some View {
     GameBoardView()
-    
   }
 }
