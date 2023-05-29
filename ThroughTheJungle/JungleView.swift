@@ -20,11 +20,6 @@ enum LevelState {
     case locked
 }
 
-class GameState: ObservableObject {
-  var level: Int = 0
-  var timeout: Bool = false
-}
-
 struct GameBoardView: View {
   let buttonCount = 30
   @State var currentLevel = 1
@@ -82,7 +77,7 @@ struct GameBoardView: View {
                   .foregroundColor(Color.white)
               )
           })
-          .disabled(state != .current)
+//          .disabled(state != .current)
           .position(x: pos.x, y: pos.y)
           Text("Through the Jungle")
             .bold()
@@ -95,7 +90,6 @@ struct GameBoardView: View {
       .onChange(of: checkState) { state in
         if state == .solved {
           currentLevel += 1
-          print("here")
           checkState = .enabled
         }
       }
@@ -105,9 +99,9 @@ struct GameBoardView: View {
       private func destinationView(for level: Int) -> some View {
           switch level {
           case 1:
-              return AnyView(NumberSequenceView(checkState: $checkState))
+            return AnyView(NumberSequenceView(checkState: $checkState, seed: 1))
           case 2:
-              return AnyView(NumberSequenceView(checkState: $checkState))
+            return AnyView(NumberSequenceView(checkState: $checkState, seed: 2))
           default:
               return AnyView(EmptyView())
           }

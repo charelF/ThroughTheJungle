@@ -19,54 +19,20 @@ enum Sign: CaseIterable {
 }
 
 struct NumberSequenceView: View {
-  static let hiddenNumbers = 1
-  static let listLength: Int = 10
-  
-  static func generateSequence() -> (original: [Int], masked: [Int?]) {
-    var original: [Int] = []
-    
-    while true {
-      print("original.count != listLength", original.count != listLength)
-      print("original.max() ?? 0 < 150", original.max() ?? 0 < 150)
-      original = []
-      let sign1 = Sign.allCases.randomElement()!
-      let val1 = Int.random(in: 1..<2)
-      //    let sign2 = Sign.allCases.randomElement()
-      //    let val2 = Int.random(in: 1..<10)
-      let startValue = Int.random(in: 1..<50)
-      
-      var newValue = startValue
-      for _ in 0..<listLength {
-        original.append(newValue)
-        newValue = sign1.op()(newValue, val1)
-      }
-      if (original.max()! < 150) && (original.min()! > 0) {
-        break
-      }
-    }
-    
-    var randomIndexes = Set<Int>()
-    while randomIndexes.count < hiddenNumbers {
-      randomIndexes.insert(Int.random(in: 0..<listLength))
-    }
-    var masked = [Int?]()
-    for i in 0..<listLength {
-      if randomIndexes.contains(i) {
-        masked.append(nil)
-      } else {
-        masked.append(original[i])
-      }
-    }
-    return (original: original, masked: masked)
-  }
-  
+
   var original: [Int]
   var masked: [Int?]
   @State var guesses: [Int?]
   @Binding var checkState: CheckState
+  var ns: NumberSequence
+  let seed: Int
   
-  init(checkState: Binding<CheckState>) {
-    let sequence = NumberSequenceView.generateSequence()
+  init(checkState: Binding<CheckState>, seed: Int) {
+//    var generator = RandomNumberGeneratorWithSeed(seed: 941)
+    ns = NumberSequence(seed: seed)
+    self.seed = seed
+    print("initialised ns with seed: \(seed)")
+    let sequence = ns.generateSequence()
     original = sequence.original
     masked = sequence.masked
     guesses = sequence.masked
@@ -94,7 +60,7 @@ struct NumberSequenceView: View {
   var body: some View {
     VStack {
       HStack {
-        ForEach(0..<NumberSequenceView.listLength, id: \.self) { index in
+        ForEach(0..<ns.listLength, id: \.self) { index in
           let m = masked[index]
           Rectangle()
             .foregroundColor(getColor(m))
@@ -130,9 +96,10 @@ struct NumberSequenceView: View {
       Text(String(describing: original))
       Text(String(describing: guesses))
       Text(String(describing: checkState != .solved))
+      Text(String(describing: self.seed))
       
       CheckView(cond: {original == guesses}, checkState: $checkState)
-        .navigationBarBackButtonHidden(checkState != .solved)
+//        .navigationBarBackButtonHidden(checkState != .solved)
     }
   }
 }
@@ -142,7 +109,8 @@ struct xxx1 : View {
   @State var checkState = CheckState.enabled
     var body: some View {
       NumberSequenceView(
-          checkState: $checkState
+          checkState: $checkState,
+          seed: 1
         )
     }
 }
@@ -151,4 +119,18 @@ struct NumberSequenceView_Previews: PreviewProvider {
   static var previews: some View {
     xxx1()
   }
+}
+
+struct RandomNumberGeneratorWithSeed: RandomNumberGenerator {
+    init(seed: Int) {
+        // Set the random seed
+        srand48(seed)
+    }
+    
+    func next() -> UInt64 {
+        // drand48() returns a Double, transform to UInt64
+        return withUnsafeBytes(of: drand48()) { bytes in
+            bytes.load(as: UInt64.self)
+        }
+    }
 }

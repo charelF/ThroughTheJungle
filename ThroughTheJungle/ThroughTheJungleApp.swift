@@ -17,19 +17,7 @@ struct ThroughTheJungleApp: App {
           .tabItem {
             Label("Game", systemImage: "list.dash")
           }
-        
-        NumberSequenceView(checkState: $checkState)
-          .tabItem {
-            Label("Game", systemImage: "list.dash")
-          }
-        
-        MatrixEquationView(checkState: $checkState)
-          .tabItem {
-            Label("Game", systemImage: "list.dash")
-          }
       }
-      
-      
     }
   }
 }

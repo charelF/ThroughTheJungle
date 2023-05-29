@@ -124,7 +124,7 @@ class MatrixEquationGameState: ObservableObject {
 
         CheckView(cond: {gameState.clickedIndices == matrixEquation.correctIndices}, checkState: $checkState)
       }
-      .navigationBarBackButtonHidden(checkState != .solved)
+//      .navigationBarBackButtonHidden(checkState != .solved)
     }
   }
 
