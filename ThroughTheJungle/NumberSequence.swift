@@ -8,12 +8,19 @@
 import Foundation
 
 class NumberSequence {
-  let hiddenNumbers = 1
+  let hiddenNumbers = 4
   let listLength: Int = 10
-  var generator: RandomNumberGeneratorWithSeed
+//  var generator: RandomNumberGeneratorWithSeed
   
-  init(seed: Int) {
-    generator = RandomNumberGeneratorWithSeed(seed: seed)
+  init(seed: Int?) {
+//    let safeseed: Int
+//    if seed == nil {
+//      safeseed = Int.random(in: 1..<1000)
+//    } else {
+//      safeseed = seed!
+//    }
+//    generator = RandomNumberGeneratorWithSeed(seed: safeseed)
+    
   }
   
   func generateSequence() -> (original: [Int], masked: [Int?]) {
@@ -24,16 +31,20 @@ class NumberSequence {
       print("original.count != listLength", original.count != listLength)
       print("original.max() ?? 0 < 150", original.max() ?? 0 < 150)
       original = []
-      let sign1 = Sign.allCases.randomElement(using: &generator)!
-      let val1 = Int.random(in: 1..<2)
-      //    let sign2 = Sign.allCases.randomElement()
-      //    let val2 = Int.random(in: 1..<10)
-      let startValue = Int.random(in: 1..<50, using: &generator)
+      let sign1 = Sign.allCases.randomElement()!
+      let val1 = Int.random(in: 1..<11)
+      let sign2 = Sign.allCases.randomElement()!
+      let val2 = Int.random(in: 1..<11)
+      let startValue = Int.random(in: 1..<50)
       
       var newValue = startValue
-      for _ in 0..<listLength {
+      for i in 0..<listLength {
         original.append(newValue)
-        newValue = sign1.op()(newValue, val1)
+        if i%2 == 0 {
+          newValue = sign1.op()(newValue, val1)
+        } else {
+          newValue = sign2.op()(newValue, val2)
+        }
       }
       if (original.max()! < 150) && (original.min()! > 0) {
         break
@@ -42,7 +53,7 @@ class NumberSequence {
     
     var randomIndexes = Set<Int>()
     while randomIndexes.count < hiddenNumbers {
-      randomIndexes.insert(Int.random(in: 0..<listLength, using: &generator))
+      randomIndexes.insert(Int.random(in: 0..<listLength))
     }
     var masked = [Int?]()
     for i in 0..<listLength {

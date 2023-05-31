@@ -19,15 +19,17 @@ enum Sign: CaseIterable {
 }
 
 struct NumberSequenceView: View {
+  
+  @State var updater: Bool = false
 
   var original: [Int]
   var masked: [Int?]
   @State var guesses: [Int?]
   @Binding var checkState: CheckState
   var ns: NumberSequence
-  let seed: Int
+  let seed: Int?
   
-  init(checkState: Binding<CheckState>, seed: Int) {
+  init(checkState: Binding<CheckState>, seed: Int?) {
 //    var generator = RandomNumberGeneratorWithSeed(seed: 941)
     ns = NumberSequence(seed: seed)
     self.seed = seed
@@ -97,6 +99,8 @@ struct NumberSequenceView: View {
       Text(String(describing: guesses))
       Text(String(describing: checkState != .solved))
       Text(String(describing: self.seed))
+      
+      Button(action: {updater.toggle()}, label: {Text("Update")})
       
       CheckView(cond: {original == guesses}, checkState: $checkState)
 //        .navigationBarBackButtonHidden(checkState != .solved)
