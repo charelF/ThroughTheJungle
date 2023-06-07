@@ -16,6 +16,7 @@
 		A289237D2A233B9E0030DC6A /* NumberSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A289237C2A233B9E0030DC6A /* NumberSequence.swift */; };
 		A29BE5BE2A165589002D4EFC /* CheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29BE5BD2A165589002D4EFC /* CheckView.swift */; };
 		A2A694E82A141C9700C9739B /* NumberSequenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A694E72A141C9700C9739B /* NumberSequenceView.swift */; };
+		A2A99FE32A312896006B1633 /* GameLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A99FE22A312896006B1633 /* GameLogic.swift */; };
 		A2FC79C829D81CE8002B4B1F /* JungleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FC79C729D81CE8002B4B1F /* JungleView.swift */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +31,7 @@
 		A289237C2A233B9E0030DC6A /* NumberSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberSequence.swift; sourceTree = "<group>"; };
 		A29BE5BD2A165589002D4EFC /* CheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckView.swift; sourceTree = "<group>"; };
 		A2A694E72A141C9700C9739B /* NumberSequenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberSequenceView.swift; sourceTree = "<group>"; };
+		A2A99FE22A312896006B1633 /* GameLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLogic.swift; sourceTree = "<group>"; };
 		A2FC79C729D81CE8002B4B1F /* JungleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JungleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -65,6 +67,7 @@
 			children = (
 				A2342C3E29D0D9510067BE20 /* ThroughTheJungleApp.swift */,
 				A2FC79C729D81CE8002B4B1F /* JungleView.swift */,
+				A2A99FE22A312896006B1633 /* GameLogic.swift */,
 				A2A694E72A141C9700C9739B /* NumberSequenceView.swift */,
 				A289237C2A233B9E0030DC6A /* NumberSequence.swift */,
 				A29BE5BD2A165589002D4EFC /* CheckView.swift */,
@@ -158,6 +161,7 @@
 				A2A694E82A141C9700C9739B /* NumberSequenceView.swift in Sources */,
 				A289237D2A233B9E0030DC6A /* NumberSequence.swift in Sources */,
 				A2342C4F29D0DB9E0067BE20 /* MatrixEquationView.swift in Sources */,
+				A2A99FE32A312896006B1633 /* GameLogic.swift in Sources */,
 				A2342C5129D4D0FD0067BE20 /* SudokuView.swift in Sources */,
 				A2342C4D29D0D9E50067BE20 /* MatrixEquation.swift in Sources */,
 				A29BE5BE2A165589002D4EFC /* CheckView.swift in Sources */,

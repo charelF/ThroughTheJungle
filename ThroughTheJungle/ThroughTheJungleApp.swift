@@ -17,7 +17,7 @@ struct ThroughTheJungleApp: App {
           .tabItem {
             Label("Game", systemImage: "list.dash")
           }
-        NumberSequenceView(checkState: $checkState, seed: nil)
+        NumberSequenceView(checkState: $checkState, ns: NumberSequence())
           .tabItem {
             Label("Game", systemImage: "list.dash")
           }

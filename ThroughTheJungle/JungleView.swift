@@ -25,6 +25,8 @@ struct GameBoardView: View {
   @State var currentLevel = 1
   //  @State var checkState: CheckState
   
+  let gameLogic = Logic()
+  
   func getPos(_ index: Int) -> (x: CGFloat, y: CGFloat, cx: CGFloat, cy: CGFloat) {
     let angle = -180 + (300 / Double(buttonCount - 1) * Double(index - 1))
     let radians = angle * .pi / 180
@@ -77,7 +79,7 @@ struct GameBoardView: View {
                   .foregroundColor(Color.white)
               )
           })
-//          .disabled(state != .current)
+          .disabled(state != .current)
           .position(x: pos.x, y: pos.y)
           Text("Through the Jungle")
             .bold()
@@ -90,7 +92,7 @@ struct GameBoardView: View {
       .onChange(of: checkState) { state in
         if state == .solved {
           currentLevel += 1
-          checkState = .enabled
+//          checkState = .enabled
         }
       }
     }
@@ -99,9 +101,15 @@ struct GameBoardView: View {
       private func destinationView(for level: Int) -> some View {
           switch level {
           case 1:
-            return AnyView(NumberSequenceView(checkState: $checkState, seed: 1))
+            return AnyView(NumberSequenceView(checkState: $checkState, ns: gameLogic.ns1))
           case 2:
-            return AnyView(NumberSequenceView(checkState: $checkState, seed: 2))
+            return AnyView(NumberSequenceView(checkState: $checkState, ns: gameLogic.ns2))
+          case 3:
+            return AnyView(NumberSequenceView(checkState: $checkState, ns: gameLogic.ns3))
+          case 4:
+            return AnyView(NumberSequenceView(checkState: $checkState, ns: gameLogic.ns4))
+          case 5:
+            return AnyView(NumberSequenceView(checkState: $checkState, ns: gameLogic.ns5))
           default:
               return AnyView(EmptyView())
           }

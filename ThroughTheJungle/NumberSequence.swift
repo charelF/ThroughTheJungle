@@ -8,28 +8,17 @@
 import Foundation
 
 class NumberSequence {
-  let hiddenNumbers = 4
+  let hiddenNumbers = 1
   let listLength: Int = 10
-//  var generator: RandomNumberGeneratorWithSeed
+  var original: [Int]
+  var masked: [Int?]
   
-  init(seed: Int?) {
-//    let safeseed: Int
-//    if seed == nil {
-//      safeseed = Int.random(in: 1..<1000)
-//    } else {
-//      safeseed = seed!
-//    }
-//    generator = RandomNumberGeneratorWithSeed(seed: safeseed)
+  init() {
     
-  }
-  
-  func generateSequence() -> (original: [Int], masked: [Int?]) {
-    
-    var original: [Int] = []
+    original = []
+    masked = []
     
     while true {
-      print("original.count != listLength", original.count != listLength)
-      print("original.max() ?? 0 < 150", original.max() ?? 0 < 150)
       original = []
       let sign1 = Sign.allCases.randomElement()!
       let val1 = Int.random(in: 1..<11)
@@ -55,7 +44,7 @@ class NumberSequence {
     while randomIndexes.count < hiddenNumbers {
       randomIndexes.insert(Int.random(in: 0..<listLength))
     }
-    var masked = [Int?]()
+    
     for i in 0..<listLength {
       if randomIndexes.contains(i) {
         masked.append(nil)
@@ -63,7 +52,5 @@ class NumberSequence {
         masked.append(original[i])
       }
     }
-    return (original: original, masked: masked)
   }
-  
 }
