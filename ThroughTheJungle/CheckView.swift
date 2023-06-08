@@ -38,7 +38,7 @@ struct CheckView: View {
     case .solved:
       return "✅"
     default:
-      return "Check: (\(remainingGuesses)/\(totalGuesses)) \(checkState)"
+      return "Check: (\(remainingGuesses)/\(totalGuesses))"
     }
   }
   

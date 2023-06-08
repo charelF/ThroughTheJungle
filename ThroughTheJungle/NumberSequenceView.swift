@@ -88,9 +88,9 @@ struct NumberSequenceView: View {
         }
       }
       
-      Text(String(describing: original))
-      Text(String(describing: guesses))
-      Text(String(describing: checkState != .solved))
+//      Text(String(describing: original))
+//      Text(String(describing: guesses))
+//      Text(String(describing: checkState != .solved))
       
       CheckView(cond: {original == guesses}, checkState: $checkState)
       

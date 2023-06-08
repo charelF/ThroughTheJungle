@@ -14,10 +14,21 @@ class MatrixEquationGameState: ObservableObject {
   @Published var rowHasBeenClicked: [Bool]
   @Published var buttonColor: [[Color]]
   @Published var clickedIndices: [Int] = [-1,-1,-1,-1]
+  
+  let rowCount: Int
+  let buttonCount: Int
 
   init(rowCount: Int, buttonCount: Int) {
+    self.rowCount = rowCount
+    self.buttonCount = buttonCount
     rowHasBeenClicked = Array(repeating: false, count: rowCount)
     buttonColor = Array(repeating: Array(repeating: Color.clear, count: buttonCount), count: rowCount)
+  }
+  
+  func reset() {
+    rowHasBeenClicked = Array(repeating: false, count: rowCount)
+    buttonColor = Array(repeating: Array(repeating: Color.clear, count: buttonCount), count: rowCount)
+    clickedIndices = [-1,-1,-1,-1]
   }
 }
 
@@ -25,24 +36,12 @@ class MatrixEquationGameState: ObservableObject {
 
     let matrixEquation: MatrixEquation
     @ObservedObject var gameState: MatrixEquationGameState
-//    @Environment(\.checkState) var checkState//: CheckState
-    
     @Binding var checkState: CheckState
     
-    init(checkState: Binding<CheckState>) {
+    init(checkState: Binding<CheckState>, matrixEquation: MatrixEquation) {
       self._checkState = checkState
-      let numRows: Int = 4
-      let numCols: Int = 4
-      matrixEquation = MatrixEquation(
-        numRows: numRows,
-        numCols: numCols,
-        maxM: 2,
-        maxB: 50, // if allowNegative and allowZero, b needs to be high enough
-        maxX: 10,
-        allowNegative: false,
-        allowZero: true
-      )
-      gameState = MatrixEquationGameState(rowCount: numCols, buttonCount: 4)
+      self.matrixEquation = matrixEquation
+      gameState = MatrixEquationGameState(rowCount: matrixEquation.numCols, buttonCount: 4)
     }
 
 
@@ -118,13 +117,14 @@ class MatrixEquationGameState: ObservableObject {
           }
         }
 
-        Text(String(describing: gameState.clickedIndices))
-        Text(String(describing: matrixEquation.correctIndices))
+//        Text(String(describing: gameState.clickedIndices))
+//        Text(String(describing: matrixEquation.correctIndices))
 
 
         CheckView(cond: {gameState.clickedIndices == matrixEquation.correctIndices}, checkState: $checkState)
+          .onTapGesture(perform: gameState.reset)
       }
-//      .navigationBarBackButtonHidden(checkState != .solved)
+      .navigationBarBackButtonHidden(checkState != .solved)
     }
   }
 
